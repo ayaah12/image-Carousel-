@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Image Carousel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #f8f9fa, #e3f2fd);
+      margin: 0;
+    }
+    .carousel {
+      width: 90%;
+      max-width: 700px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+    .slides {
+      display: flex;
+      transition: transform 0.6s ease-in-out;
+    }
+    .slides img {
+      width: 100%;
+      flex: 0 0 100%;
+      border-radius: 20px;
+      object-fit: cover;
+    }
+    .buttons {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      transform: translateY(-50%);
+      padding: 0 10px;
+    }
+    button {
+      background: rgba(0,0,0,0.5);
+      border: none;
+      color: white;
+      padding: 10px 15px;
+      cursor: pointer;
+      border-radius: 50%;
+      font-size: 20px;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: rgba(0,0,0,0.8);
+    }
+    .dots {
+      text-align: center;
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+    }
+    .dot {
+      display: inline-block;
+      height: 10px;
+      width: 10px;
+      margin: 0 5px;
+      background: #bbb;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .dot.active {
+      background: #333;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="carousel">
+    <div class="slides">
+      <img src="https://picsum.photos/id/1015/800/400" alt="Image 1">
+      <img src="https://picsum.photos/id/1016/800/400" alt="Image 2">
+      <img src="https://picsum.photos/id/1018/800/400" alt="Image 3">
+      <img src="https://picsum.photos/id/1020/800/400" alt="Image 4">
+    </div>
+    <div class="buttons">
+      <button id="prev">&#10094;</button>
+      <button id="next">&#10095;</button>
+    </div>
+    <div class="dots"></div>
+  </div>
+
+  <script>
+    const slides = document.querySelector('.slides');
+    const images = document.querySelectorAll('.slides img');
+    const total = images.length;
+    const dotsContainer = document.querySelector('.dots');
+    let index = 0;
+
+    // create dots
+    for (let i = 0; i < total; i++) {
+      const dot = document.createElement('span');
+      dot.classList.add('dot');
+      dot.addEventListener('click', () => {
+        index = i;
+        updateCarousel();
+        resetAutoSlide();
+      });
+      dotsContainer.appendChild(dot);
+    }
+  const dots = document.querySelectorAll('.dot');
+  if (dots.length > 0) dots[0].classList.add('active');
+
+    function updateCarousel() {
+      slides.style.transform = `translateX(${-index * 100}%)`;
+      dots.forEach(dot => dot.classList.remove('active'));
+      if (dots[index]) dots[index].classList.add('active');
+    }
+
+    const nextBtn = document.getElementById('next');
+    if (nextBtn) nextBtn.addEventListener('click', () => {
+      index = (index + 1) % total;
+      updateCarousel();
+      resetAutoSlide();
+    });
+
+    const prevBtn = document.getElementById('prev');
+    if (prevBtn) prevBtn.addEventListener('click', () => {
+      index = (index - 1 + total) % total;
+      updateCarousel();
+      resetAutoSlide();
+    });
+
+    // Auto slide every 3 seconds
+    let autoSlide = setInterval(() => {
+      index = (index + 1) % total;
+      updateCarousel();
+    }, 3000);
+
+    function resetAutoSlide() {
+      clearInterval(autoSlide);
+      autoSlide = setInterval(() => {
+        index = (index + 1) % total;
+        updateCarousel();
+      }, 3000);
+    }
+  </script>
+
+</body>
+</html>
